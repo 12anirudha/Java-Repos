@@ -1,0 +1,33 @@
+1️⃣ Create RestTemplate Bean
+@Bean
+public RestTemplate restTemplate() {
+    return new RestTemplate();
+}
+
+2️⃣ Call GET API
+String url = "http://localhost:8081/users/1";
+
+User user = restTemplate.getForObject(url, User.class);
+
+3️⃣ Call POST API
+User user = new User("Anirudha");
+
+User response = restTemplate.postForObject(
+        "http://localhost:8081/users",
+        user,
+        User.class
+);
+
+🔹 Using exchange() (Most Flexible)
+HttpHeaders headers = new HttpHeaders();
+headers.set("Authorization", "Bearer token");
+
+HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+ResponseEntity<User> response =
+        restTemplate.exchange(
+            url,
+            HttpMethod.GET,
+            entity,
+            User.class
+        );
