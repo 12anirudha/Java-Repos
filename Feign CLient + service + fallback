@@ -1,0 +1,24 @@
+Feign Client + Service Discovery (Eureka)
+@FeignClient(name = "USER-SERVICE")
+public interface UserFeignClient {
+    @GetMapping("/users/{id}")
+    User getUser(@PathVariable Long id);
+}
+
+
+👉 No URL needed
+👉 Eureka resolves service instance
+
+🔹 Feign Client Error Handling
+@FeignClient(name = "user-service", fallback = UserFallback.class)
+public interface UserFeignClient {
+    @GetMapping("/users/{id}")
+    User getUser(@PathVariable Long id);
+}
+
+@Component
+class UserFallback implements UserFeignClient {
+    public User getUser(Long id) {
+        return new User(id, "Default User");
+    }
+}
