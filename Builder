@@ -1,0 +1,39 @@
+//POJO class with inner class as builder 
+class User {
+
+    private final String name;
+    private final int age;
+
+    private User(Builder builder) {
+        this.name = builder.name;
+        this.age = builder.age;
+    }
+
+    public static class Builder {
+        private final String name;
+        private final int age;
+
+        public Builder(String name, int age) {
+            this.name = name;
+            this.age = age;
+        }
+
+        public User build() {
+            return new User(this);
+        }
+    }
+}
+
+
+////////////////////////////////// Main CLass ///////////////////////////////////////////////////
+
+
+public class Main {
+    public static void main(String[] args) {
+
+        User user = new User.Builder("Anirudha", 23)
+                .build();
+
+        System.out.println(user);
+    }
+}
