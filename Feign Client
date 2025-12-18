@@ -1,0 +1,41 @@
+imple Feign Client Example
+1️⃣ Add Dependency
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-openfeign</artifactId>
+</dependency>
+
+2️⃣ Enable Feign Clients
+@SpringBootApplication
+@EnableFeignClients
+public class DemoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+}
+
+3️⃣ Create Feign Client Interface
+@FeignClient(name = "user-service", url = "http://localhost:8081")
+public interface UserFeignClient {
+
+    @GetMapping("/users/{id}")
+    User getUserById(@PathVariable Long id);
+}
+
+
+👉 No implementation required.
+
+4️⃣ Use Feign Client
+@Service
+public class OrderService {
+
+    private final UserFeignClient userFeignClient;
+
+    public OrderService(UserFeignClient userFeignClient) {
+        this.userFeignClient = userFeignClient;
+    }
+
+    public User getUser(Long id) {
+        return userFeignClient.getUserById(id);
+    }
+}
