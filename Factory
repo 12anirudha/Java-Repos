@@ -18,23 +18,28 @@ class UpiPayment implements Payment {
 }
 
 //Factory Class
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
+
 class PaymentFactory {
 
-    private static final Map<String, Payment> MAP = new HashMap<>();
+    private static final Map<String, Supplier<Payment>> MAP = new HashMap<>();
 
     static {
-        MAP.put("CARD", new CardPayment());
-        MAP.put("UPI", new UpiPayment());
+        MAP.put("CARD", CardPayment::new);
+        MAP.put("UPI", UpiPayment::new);
     }
 
     public static Payment getPayment(String type) {
-        Payment payment = MAP.get(type.toUpperCase());
-        if (payment == null) {
+        Supplier<Payment> supplier = MAP.get(type.toUpperCase());
+        if (supplier == null) {
             throw new IllegalArgumentException("Invalid payment type");
         }
-        return payment;
+        return supplier.get();
     }
 }
+
 
 //Main class
 public class Main {
