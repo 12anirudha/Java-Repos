@@ -1,0 +1,73 @@
+/////////////  Global Exception Handling (@ControllerAdvice)
+
+/////////////  Step 1: Create Custom Exception
+public class ResourceNotFoundException extends RuntimeException {
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
+}
+
+///////////// Step 2: Global Exception Handler
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<String> handleNotFound(ResourceNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGeneric(Exception ex) {
+        return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
+
+////////////// Step 3: Throw Exception from Code
+if (user == null) {
+    throw new ResourceNotFoundException("User not found");
+}
+
+
+
+//////////////////////////////////////// 
+✅ 3️⃣ Proper Error Response Structure (Production Style)
+Error DTO
+public class ErrorResponse {
+    private String message;
+    private int status;
+    private long timestamp;
+
+    // constructor + getters
+}
+
+Handler
+@ExceptionHandler(ResourceNotFoundException.class)
+public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException ex) {
+    ErrorResponse error = new ErrorResponse(
+        ex.getMessage(),
+        HttpStatus.NOT_FOUND.value(),
+        System.currentTimeMillis()
+    );
+    return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+}
+
+
+
+//////////////////////////////////
+✅ 4️⃣ Validation Exceptions (@Valid) ⭐⭐⭐
+Entity / DTO
+import jakarta.validation.constraints.*;
+
+public class UserRequest {
+
+    @NotBlank
+    private String name;
+
+    @Min(18)
+    private int age;
+}
+
+Controller
+@PostMapping("/users")
+public void createUser(@Valid @RequestBody UserRequest request) {
+}
