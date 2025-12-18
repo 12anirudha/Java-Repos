@@ -1,0 +1,110 @@
+✅ 1️⃣ Add Spring Security Dependency
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+
+
+👉 By default, Spring Security locks everything.
+
+✅ 2️⃣ Basic Security Configuration (Modern – Spring Security 6+)
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/public/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .httpBasic(); // basic auth
+
+        return http.build();
+    }
+}
+
+
+✔ /public/** → open
+✔ all other APIs → secured
+
+✅ 3️⃣ In-Memory Authentication (Simple Demo)
+@Bean
+UserDetailsService userDetailsService() {
+    UserDetails user = User.withUsername("admin")
+            .password("{noop}password")
+            .roles("ADMIN")
+            .build();
+
+    return new InMemoryUserDetailsManager(user);
+}
+
+
+⚠️ {noop} → no encoding (only for demo)
+
+🔥 Interview Line
+
+Spring Security secures REST APIs using filters that intercept requests before reaching controllers.
+
+✅ 4️⃣ Role-Based Authorization
+.authorizeHttpRequests(auth -> auth
+    .requestMatchers("/admin/**").hasRole("ADMIN")
+    .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+    .anyRequest().authenticated()
+)
+
+✅ 5️⃣ JWT-Based Security (MOST USED ⭐⭐⭐⭐⭐)
+
+👉 Best for stateless REST APIs / microservices
+
+Flow
+
+User logs in
+
+Server generates JWT
+
+Client sends JWT in Authorization header
+
+Server validates JWT
+
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
+
+JWT Filter (High Level)
+OncePerRequestFilter
+
+
+Extract token
+
+Validate
+
+Set authentication in SecurityContext
+
+Interview Line
+
+JWT enables stateless authentication, making it ideal for scalable REST APIs.
+
+✅ 6️⃣ Disable CSRF (Important for REST)
+http.csrf(csrf -> csrf.disable());
+
+
+👉 REST APIs don’t use cookies → CSRF not needed.
+
+✅ 7️⃣ Secure Endpoints with Annotations
+@PreAuthorize("hasRole('ADMIN')")
+@GetMapping("/admin")
+public String adminApi() {
+    return "admin only";
+}
+
+
+Enable method security:
+
+@EnableMethodSecurity
+
+✅ 8️⃣ Password Encoding (Production MUST)
+@Bean
+PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+}
