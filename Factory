@@ -1,0 +1,45 @@
+// Interface
+interface Payment {
+    void pay();
+}
+
+
+//N number or implementtations
+class CardPayment implements Payment {
+    public void pay() {
+        System.out.println("Card payment");
+    }
+}
+
+class UpiPayment implements Payment {
+    public void pay() {
+        System.out.println("UPI payment");
+    }
+}
+
+//Factory Class
+class PaymentFactory {
+
+    private static final Map<String, Payment> MAP = new HashMap<>();
+
+    static {
+        MAP.put("CARD", new CardPayment());
+        MAP.put("UPI", new UpiPayment());
+    }
+
+    public static Payment getPayment(String type) {
+        Payment payment = MAP.get(type.toUpperCase());
+        if (payment == null) {
+            throw new IllegalArgumentException("Invalid payment type");
+        }
+        return payment;
+    }
+}
+
+//Main class
+public class Main {
+    public static void main(String[] args) {
+        Payment p = PaymentFactory.getPayment("UPI");
+        p.pay();
+    }
+}
