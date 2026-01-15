@@ -10,3 +10,19 @@ future.thenAccept(result -> {
 
 Transform result
 future.thenApply(data -> data.toUpperCase());
+
+
+2️⃣ CompletableFuture (Modern & Powerful)
+What it is
+
+CompletableFuture is an enhanced Future that supports:
+
+Non-blocking execution
+Callbacks
+Chaining
+Composition
+Exception handling
+CompletableFuture
+    .supplyAsync(() -> 10)
+    .thenApply(v -> v * 2)
+    .thenAccept(System.out::println);
