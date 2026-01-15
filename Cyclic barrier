@@ -1,0 +1,40 @@
+A reusable barrier where a fixed number of threads wait for each other before moving to the next phase.
+
+How it works
+
+Initialized with number of parties
+
+Each thread calls await()
+
+When all threads arrive, barrier opens
+
+✔ Automatically resets (cyclic)
+
+Example
+CyclicBarrier barrier = new CyclicBarrier(3,
+    () -> System.out.println("All threads reached barrier"));
+
+Runnable task = () -> {
+    doWork();
+    barrier.await();
+    nextPhase();
+};
+
+Typical use cases
+
+Parallel algorithms with phases
+
+Simulation steps
+
+Multiplayer game rounds
+
+Batch processing stages
+
+🔍 Key Differences (Interview Table)
+Aspect	CountDownLatch	CyclicBarrier
+Reusability	❌ One-time	✅ Reusable
+Who waits	One or more threads	All participating threads
+Trigger	Counter reaches zero	All threads reach barrier
+Reset	❌ No	✅ Yes
+Optional action	❌ No	✅ Yes (barrier action)
+Direction	Workers → main thread	Peer-to-peer
