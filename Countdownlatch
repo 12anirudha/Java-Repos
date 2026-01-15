@@ -1,0 +1,26 @@
+🔹 CountDownLatch
+What it does
+
+A one-time gate that allows one or more threads to wait until a counter reaches zero.
+
+How it works
+
+Initialized with a count
+
+Worker threads call countDown()
+
+Waiting thread(s) call await()
+
+When count hits 0, waiting threads proceed
+
+❌ Cannot be reused
+
+Example
+CountDownLatch latch = new CountDownLatch(3);
+
+executor.submit(() -> { task1(); latch.countDown(); });
+executor.submit(() -> { task2(); latch.countDown(); });
+executor.submit(() -> { task3(); latch.countDown(); });
+
+latch.await(); // waits until all 3 finish
+System.out.println("All tasks done");
