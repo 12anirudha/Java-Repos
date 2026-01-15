@@ -1,0 +1,12 @@
+4️⃣ Using CompletableFuture (Best Practice)
+Return async result (non-blocking)
+CompletableFuture<String> future =
+    CompletableFuture.supplyAsync(() -> fetchData());
+
+Handle result
+future.thenAccept(result -> {
+    System.out.println(result);
+});
+
+Transform result
+future.thenApply(data -> data.toUpperCase());
